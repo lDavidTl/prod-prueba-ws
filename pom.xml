@@ -76,8 +76,8 @@
 			<version>2.5.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.security</groupId>
-			<artifactId>sec</artifactId>
+			<groupId>com.producto</groupId>
+			<artifactId>prd</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
