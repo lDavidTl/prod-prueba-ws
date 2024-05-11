@@ -3,21 +3,23 @@ package com.producto.prd.config;
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
-@Component
+@Configuration
 @EnableWebSecurity
 public class SecurityConfigPathAccess {
+
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
@@ -28,22 +30,23 @@ public class SecurityConfigPathAccess {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-	
+
 	@Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter();
-    }
-	
+	public TokenAuthenticationFilter tokenAuthenticationFilter() {
+		return new TokenAuthenticationFilter();
+	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.csrf(AbstractHttpConfigurer::disable)
 		.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-		.exceptionHandling(exception -> exception.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
 			.authorizeHttpRequests((authz) -> authz
-				.requestMatchers("/signup","/login").permitAll()
+				.requestMatchers("/swagger/**").permitAll()
 				.anyRequest()
-				.authenticated()).addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);;
+				.authenticated())
+				.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
+
 }

@@ -14,33 +14,15 @@ import io.jsonwebtoken.UnsupportedJwtException;
 
 @Service
 public class TokenProvider {
-	private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
-	@Value("${app.prd.tokenSecret}")
-	private String secret;
+    private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
-	@Value("${app.prd.tokenExpirationMsec}")
-	private Integer expiration;
-
-
-	public boolean validateToken(String authToken) {
-		try {
-			Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
-			return true;
-		} catch (SignatureException ex) {
-			logger.error("Invalid JWT signature");
-		} catch (MalformedJwtException ex) {
-			logger.error("Invalid JWT token");
-		} catch (ExpiredJwtException ex) {
-			logger.error("Expired JWT token");
-		} catch (UnsupportedJwtException ex) {
-			logger.error("Unsupported JWT token");
-		} catch (IllegalArgumentException ex) {
-			logger.error("JWT claims string is empty.");
-		}
-		return false;
-	}
-	
+    @Value("${app.prd.tokenSecret}")
+    private String secret;
+    
+    @Value("${app.prd.tokenExpirationMsec}")
+    private Integer expiration;
+    
 	public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(secret)
@@ -50,9 +32,24 @@ public class TokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 	
-	public Claims returnClaims (String token) {
-		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-		
-	}
+	
+
+    public boolean validateToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
+            return true;
+        } catch (SignatureException ex) {
+            logger.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            logger.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            logger.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            logger.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            logger.error("JWT claims string is empty.");
+        }
+        return false;
+    }
 
 }
