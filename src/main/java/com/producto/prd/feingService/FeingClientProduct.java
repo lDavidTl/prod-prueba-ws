@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.producto.prd.dto.ProductDto;
 
 
-@FeignClient(name = "productService", url = "${product.url.service}")
+@FeignClient(name = "fakestoreapiService", url = "${product.url.service}")
 public interface FeingClientProduct {
 	
 	 @GetMapping("products")
